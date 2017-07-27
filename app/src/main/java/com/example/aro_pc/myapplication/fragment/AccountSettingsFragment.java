@@ -65,6 +65,7 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
