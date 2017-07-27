@@ -14,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.aro_pc.myapplication.Consts;
 import com.example.aro_pc.myapplication.R;
+import com.example.aro_pc.myapplication.helper.SharedPreferanceHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,6 +57,7 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
     private DatabaseReference reference;
     private FirebaseDatabase database;
     private String mFileName;
+    private TextView profileUserName, profileUserEmail,profileUserPassword;
 
 
     public AccountSettingsFragment() {
@@ -68,6 +71,9 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_settings, container, false);
         accountImageView =  view.findViewById(R.id.account_settings_image_view);
+        profileUserName = (TextView) view.findViewById(R.id.user_info_name);
+        profileUserEmail = (TextView) view.findViewById(R.id.user_info_mail);
+        profileUserPassword = (TextView) view.findViewById(R.id.user_info_password);
         accountImageView.setOnClickListener(this);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -83,12 +89,20 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
                         accountImageView.setImageResource(R.drawable.ic_account_box_black_24dp);
                         break;
                     default:
-                        StorageReference storageReference1 = storageReference.child(USERS_STORAGE_NAME).child(user.getUid()).child(Consts.ACCOUNT_IMAGE_STORAGE);
-                        try {
-                            downloadFromDatabase(data,storageReference1);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (SharedPreferanceHelper.getInstance().getBoolean(Consts.SHARED_PREFERANCES_PROFILE_PICTURE,false)){
+                            String absolutePath = SharedPreferanceHelper.getInstance().getString(Consts.SHARED_PREFERANCES_PROFILE_PICTURE_FILE_DIR,"");
+                            Bitmap myBitmap = BitmapFactory.decodeFile(absolutePath);
+                            accountImageView.setImageBitmap(myBitmap);
+
+                        } else {
+                            StorageReference storageReference1 = storageReference.child(USERS_STORAGE_NAME).child(user.getUid()).child(Consts.ACCOUNT_IMAGE_STORAGE);
+                            try {
+                                downloadFromDatabase(data,storageReference1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
+
                         break;
                 }
             }
@@ -118,6 +132,8 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
                         // ...
                         if(imageFile.exists()){
 
+                            SharedPreferanceHelper.getInstance().saveBoolean(Consts.SHARED_PREFERANCES_PROFILE_PICTURE,true);
+                            SharedPreferanceHelper.getInstance().saveString(Consts.SHARED_PREFERANCES_PROFILE_PICTURE_FILE_DIR,imageFile.getAbsolutePath());
                             Bitmap myBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 
                             accountImageView.setImageBitmap(myBitmap);
@@ -163,7 +179,7 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
                 File file = new File(getActivity().getCacheDir(), "accountImage.jpg");
                 copyInputStreamToFile(inputStream, file);
                 sendImageToServer(file);
-                accountImageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+//                accountImageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

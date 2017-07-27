@@ -6,6 +6,17 @@ package com.example.aro_pc.myapplication;
 
 public class Consts {
 
+    //sharedPreferance
+    public static final String SHARED_PREFERANCES_NAME = "AppSharedPref";
+    public static final String SHARED_PREFERANCES_LOGEDIN = "logeIn";
+    public static final String SHARED_PREFERANCES_UID = "userID";
+    public static final String SHARED_PREFERANCES_PROFILE_PICTURE = "profilePictiure";
+    public static final String SHARED_PREFERANCES_PROFILE_PICTURE_FILE_DIR = "profilePictiureFileDir";
+
+
+
+
+
     //values in database
     public static final String DATABASE_NAME_VALUE = "Users";
     public static final String GET_LOCATION_VALUE = "getLocation";

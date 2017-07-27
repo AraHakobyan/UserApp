@@ -1,6 +1,8 @@
 package com.example.aro_pc.myapplication.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,8 +12,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.aro_pc.myapplication.BaseActivity;
+import com.example.aro_pc.myapplication.Consts;
 import com.example.aro_pc.myapplication.R;
+import com.example.aro_pc.myapplication.UserApp;
 import com.example.aro_pc.myapplication.custom_view.MyEditText;
+import com.example.aro_pc.myapplication.helper.SharedPreferanceHelper;
 import com.example.aro_pc.myapplication.helper.UserHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import static com.example.aro_pc.myapplication.Consts.DATABASE_NAME;
+import static com.example.aro_pc.myapplication.Consts.SHARED_PREFERANCES_LOGEDIN;
+import static com.example.aro_pc.myapplication.Consts.SHARED_PREFERANCES_UID;
 import static com.example.aro_pc.myapplication.Consts.UID;
 import static com.example.aro_pc.myapplication.Consts.USER_MODEL_IMAGEURL;
 import static com.example.aro_pc.myapplication.Consts.USER_MODEL_LOCATION;
@@ -41,13 +48,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private FirebaseDatabase database;
     private Button mCreateAccount, mSignIn;
     private MyEditText mUserName, mPassword;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity_layout);
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseApp.initializeApp(this);
+        FirebaseApp.initializeApp(UserApp.getInstance());
         database = FirebaseDatabase.getInstance();
         mSignIn = (Button) findViewById(R.id.sign_in_button);
         mCreateAccount = (Button) findViewById(R.id.create_account_button);
@@ -57,9 +66,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mCreateAccount.setOnClickListener(this);
         mSignIn.setOnClickListener(this);
 
+
+        isLogedIn();
     }
 
+    private void isLogedIn() {
+        sharedPreferences = getApplicationContext().getSharedPreferences(Consts.SHARED_PREFERANCES_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        SharedPreferanceHelper.getInstance().setSharedPreferences(sharedPreferences);
+        SharedPreferanceHelper.getInstance().setEditor(editor);
 
+        if (SharedPreferanceHelper.getInstance().getBoolean(SHARED_PREFERANCES_LOGEDIN,false)){
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
 
     private FirebaseUser user;
 
@@ -76,6 +98,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //                            createUserInDatabase(user.getUid(), mUserName.getText().toString(), mPassword.getText().toString());
 
                             UserHelper.getInstance().getUserModel().setUid(user.getUid());
+                            SharedPreferanceHelper.getInstance().saveBoolean(SHARED_PREFERANCES_LOGEDIN,true);
+                            SharedPreferanceHelper.getInstance().saveString(SHARED_PREFERANCES_UID,user.getUid());
+
+
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
@@ -111,7 +137,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void createUserInDatabase(final String uid, final String userName, final String password) {
 
         database.getReference(DATABASE_NAME).child(uid).setValue(uid);
-        database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_NAME).setValue("user");
+        database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_NAME).setValue(userName);
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_USERNAME).setValue(userName);
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_PASSWORD).setValue(password);
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_LOCATION).setValue("location");
@@ -119,6 +145,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_IMAGEURL).setValue("image");
         database.getReference(DATABASE_NAME).child(uid).child(UID).setValue(uid);
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_VOICE_URL).setValue("voiceUrl");
+
+        SharedPreferanceHelper.getInstance().saveBoolean(SHARED_PREFERANCES_LOGEDIN,true);
+        SharedPreferanceHelper.getInstance().saveString(SHARED_PREFERANCES_UID,user.getUid());
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);

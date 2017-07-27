@@ -66,7 +66,6 @@ public class BackgroundService extends Service implements ValueEventListener {
 
     private String uid;
 
-
     @Override
     public void onCreate() {
 
@@ -102,13 +101,12 @@ public class BackgroundService extends Service implements ValueEventListener {
     }
 
     private void setRocorderListener() {
+
         mFileName = getFilesDir().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
-
         reference = firebaseDatabase.getReference(Consts.DATABASE_NAME).child(uid).child(Consts.USER_MODEL_VOICE);
         storageReference = FirebaseStorage.getInstance().getReference();
         reference.addValueEventListener(this);
-
 
     }
 
@@ -171,12 +169,10 @@ public class BackgroundService extends Service implements ValueEventListener {
                 break;
             case Consts.STOP_LISTEN:
                 Log.d(Consts.USER_MODEL_VOICE, Consts.STOP_LISTEN);
-
                 stopVoiceRecording();
                 break;
             case Consts.GET_RECORD:
                 Log.d(Consts.USER_MODEL_VOICE, Consts.GET_RECORD);
-
                 setndRecordToServer();
                 break;
             default:
@@ -204,7 +200,6 @@ public class BackgroundService extends Service implements ValueEventListener {
 
     private void startVoiceRecording() {
         startRecording();
-
     }
 
     @Override
