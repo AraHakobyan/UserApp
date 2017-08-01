@@ -71,7 +71,7 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_settings, container, false);
-        accountImageView =  view.findViewById(R.id.account_settings_image_view);
+        accountImageView = (ImageView) view.findViewById(R.id.account_settings_image_view);
         profileUserName = (TextView) view.findViewById(R.id.user_info_name);
         profileUserEmail = (TextView) view.findViewById(R.id.user_info_mail);
         profileUserPassword = (TextView) view.findViewById(R.id.user_info_password);
@@ -98,7 +98,7 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
                         } else {
                             StorageReference storageReference1 = storageReference.child(USERS_STORAGE_NAME).child(user.getUid()).child(Consts.ACCOUNT_IMAGE_STORAGE);
                             try {
-                                downloadFromDatabase(data,storageReference1);
+                                downloadFromDatabase(storageReference1);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -120,7 +120,7 @@ public class AccountSettingsFragment extends Fragment implements View.OnClickLis
     }
 
     private File imageFile;
-    private void downloadFromDatabase(String data, StorageReference storageReference1) throws IOException {
+    private void downloadFromDatabase( StorageReference storageReference1) throws IOException {
         mFileName = getActivity().getCacheDir().getAbsolutePath();
         mFileName +=  "/" +user.getUid() + "image.jpg";
         imageFile = new File(mFileName);

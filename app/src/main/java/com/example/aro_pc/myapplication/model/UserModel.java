@@ -21,6 +21,16 @@ public class UserModel {
     private String voice;
     private String imageUrl;
 
+    public String getOnline() {
+        return online;
+    }
+
+    public void setOnline(String online) {
+        this.online = online;
+    }
+
+    private String online;
+
     public String getName() {
         return name;
     }

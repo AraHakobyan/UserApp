@@ -9,4 +9,12 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="chat_item_padding">16dp</dimen>
     <dimen name="simple_text_view_size">17sp</dimen>
+
+    //login layout
+
+    <dimen name="login_bit_text_view_size">22sp</dimen>
+    <dimen name="login_small_text_view_size">17sp</dimen>
+    <dimen name="login_normal_text_view_size">20sp</dimen>
+
+
 </resources>

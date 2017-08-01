@@ -8,7 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.aro_pc.myapplication.BaseActivity;
@@ -46,10 +47,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
-    private Button mCreateAccount, mSignIn;
+    private FrameLayout mCreateAccount, mSignIn;
     private MyEditText mUserName, mPassword;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private LinearLayout layoutCreateAccount, layoutlogIn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +60,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(UserApp.getInstance());
         database = FirebaseDatabase.getInstance();
-        mSignIn = (Button) findViewById(R.id.sign_in_button);
-        mCreateAccount = (Button) findViewById(R.id.create_account_button);
+        mSignIn = (FrameLayout) findViewById(R.id.sign_in_button);
+        mCreateAccount = (FrameLayout) findViewById(R.id.create_account_button);
         mUserName = (MyEditText) findViewById(R.id.login_user_name);
         mPassword = (MyEditText) findViewById(R.id.login_password);
+        layoutCreateAccount = (LinearLayout) findViewById(R.id.login_new_account);
+        layoutlogIn = (LinearLayout) findViewById(R.id.login_first_page);
 
         mCreateAccount.setOnClickListener(this);
         mSignIn.setOnClickListener(this);
@@ -114,6 +118,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 });
                 break;
             case R.id.create_account_button:
+
+//                layoutlogIn.setVisibility(View.GONE);
+//                layoutCreateAccount.setVisibility(View.VISIBLE);
+
                 firebaseAuth.createUserWithEmailAndPassword(mUserName.getText().toString(), mPassword.getText().toString()).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -142,9 +150,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_PASSWORD).setValue(password);
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_LOCATION).setValue("location");
         database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_VOICE).setValue("voice");
-        database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_IMAGEURL).setValue("image");
+        database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_IMAGEURL).setValue(Consts.USER_MODEL_IMAGEURL_VALUE);
         database.getReference(DATABASE_NAME).child(uid).child(UID).setValue(uid);
-        database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_VOICE_URL).setValue("voiceUrl");
+        database.getReference(DATABASE_NAME).child(uid).child(USER_MODEL_VOICE_URL).setValue(USER_MODEL_VOICE_URL);
 
         SharedPreferanceHelper.getInstance().saveBoolean(SHARED_PREFERANCES_LOGEDIN,true);
         SharedPreferanceHelper.getInstance().saveString(SHARED_PREFERANCES_UID,user.getUid());
