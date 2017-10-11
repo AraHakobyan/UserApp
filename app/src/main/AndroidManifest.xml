@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.aro_pc.myapplication">
+
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -8,34 +10,51 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/navigation_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/navigation_icon"
         android:supportsRtl="true"
-        android:name="android.support.multidex.MultiDexApplication"
+        android:name="com.example.aropc.myapplication.UserApp"
         android:theme="@style/AppTheme">
         <activity
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name="com.example.aropc.myapplication.activity.MainActivity">
         </activity>
         <activity
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:name=".activity.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name="com.example.aropc.myapplication.activity.NameLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name=".services.BackgroundService" android:process=":location"/>
+        <activity
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name="com.example.aropc.myapplication.activity.LoginActivity">
+
+        </activity>
+        <receiver android:name="com.example.aropc.myapplication.services.BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.example.aropc.myapplication.services.BackgroundService"
+                 android:process=":location"
+            />
 
     </application>
 

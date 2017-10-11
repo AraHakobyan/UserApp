@@ -77,7 +77,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <com.example.aro_pc.myapplication.custom_view.MyEditText
+                            <com.example.aropc.myapplication.custom_view.MyEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/login_user_name_hint"
@@ -85,7 +85,7 @@
                                 android:textColorHint="@color/colorLoginTextWhite"
                                 android:textSize="@dimen/login_small_text_view_size"/>
 
-                            <com.example.aro_pc.myapplication.custom_view.MyEditText
+                            <com.example.aropc.myapplication.custom_view.MyEditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
